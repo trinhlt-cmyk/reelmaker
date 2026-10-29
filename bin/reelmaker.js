@@ -28,7 +28,7 @@ const HOME = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const HELP = `reelmaker — video từ cảnh HTML + giọng đọc
 
   reelmaker setup                         kiểm tra máy + chọn giọng, khung hình, giao diện, nhạc, tiếng hiệu ứng mặc định
-     [--voice HoaiMy|NamMinh|"vieneu:Ngọc Huyền"] [--rate +5%] [--format 16:9|9:16|1:1] [--theme dark|light]
+     [--voice "<tên hoặc số trong reelmaker voices>"] [--rate +5%] [--format 16:9|9:16|1:1] [--theme dark|light]
      [--music calm|upbeat|acoustic|epic|none] [--musicLevel low|mid|high] [--sfx on|soft|off]
      [--transition fade|slideleft|gl:cube|cut|…] [--transitionDuration fast|normal|slow|0.6] [--beatSync on|off] [--videosDir …]
   reelmaker doctor                        chỉ kiểm tra máy

@@ -9,7 +9,8 @@ import { voiceScene } from './voice.js';
 import { resolveTransition } from './transitions.js';
 
 const HOME = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const PYTHON = path.join(HOME, '.venv-vieneu', 'bin', 'python'); // có librosa (cài kèm vieneu)
+// librosa: có sẵn trong .venv-vieneu (cài kèm VieNeu); không có VieNeu thì cài vào .venv (xem README)
+const PYTHON = [path.join(HOME, '.venv-vieneu', 'bin', 'python'), path.join(HOME, '.venv', 'bin', 'python')].find((p) => fs.existsSync(p));
 const LONGER = 0.6; // cảnh được kéo dài tối đa chừng này để chờ nhịp
 const SILENT_FLEX = 0.35; // giây
 const SHORTER = 0.25; // hoặc rút ngắn tối đa chừng này (vẫn chừa ≥ MIN_PAUSE sau lời)
