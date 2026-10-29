@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .sky {
+    position: absolute; inset: 0;
+    background: linear-gradient(#1e5bb8, #6fb4ff 70%, #cfe6ff);
+    animation: fade-in 1.2s ease forwards; opacity: 0;
+  }
+  .sun {
+    position: absolute; top: 14%; right: 14%; width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(#fff6c9, #ffd35a 60%, #ffb547);
+    box-shadow: 0 0 120px 40px rgba(255, 210, 90, .55);
+    animation-delay: .4s;
+  }
+  h1 {
+    position: relative; font-size: 120px; font-weight: 800; text-align: center; line-height: 1.1;
+    text-shadow: 0 6px 30px rgba(0, 0, 40, .35); animation-delay: .7s;
+  }
+  h1 em { font-style: normal; color: #0b2a66; background: #fff; padding: 0 .2em; border-radius: .15em; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="sky"></div>
+    <div class="sun pop"></div>
+    <h1 class="fade-up">Vì sao bầu trời<br>màu <em>xanh</em>?</h1>
+  </div>
+</body>
+</html>

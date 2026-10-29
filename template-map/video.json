@@ -1,0 +1,23 @@
+{
+  "title": "Hành trình về xứ Thanh",
+  "style": "map",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "captions": true,
+  "transition": "fade",
+  "scenes": [
+    {
+      "id": "01-duong-bo",
+      "html": "scenes/01-duong-bo.html",
+      "narration": "Từ Hà Nội, theo cao tốc Bắc Nam, chỉ khoảng ba tiếng là bạn đã qua Ninh Bình và tới biển Sầm Sơn, Thanh Hoá.",
+      "map": { "stops": "Hà Nội; Ninh Bình; Sầm Sơn, Thanh Hoá", "mode": "drive" }
+    },
+    {
+      "id": "02-bay",
+      "html": "scenes/02-bay.html",
+      "narration": "Còn nếu muốn vào Nam, một chuyến bay từ Hà Nội tới Thành phố Hồ Chí Minh chỉ mất hơn hai tiếng.",
+      "map": { "stops": "Hà Nội; Thành phố Hồ Chí Minh", "mode": "flight", "chip": "Hà Nội – TP.HCM · ~2 giờ bay" }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=block');
+
+:root {
+  --bg: #0b1324;
+  --fg: #f4f6fb;
+  --muted: #9aa6c1;
+  --accent: #4da3ff;
+  --warm: #ffb547;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg); color: var(--fg);
+  font-family: 'Be Vietnam Pro', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+
+/* hiệu ứng dùng lại; đặt animation-delay để nối tiếp nhau */
+@keyframes fade-up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.6); } 70% { transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.fade-up { opacity: 0; animation: fade-up .8s cubic-bezier(.2,.7,.2,1) forwards; }
+.fade-in { opacity: 0; animation: fade-in .8s ease forwards; }
+.pop     { opacity: 0; animation: pop .7s cubic-bezier(.2,.7,.2,1) forwards; }

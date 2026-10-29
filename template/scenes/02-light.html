@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .row { display: flex; align-items: center; gap: 80px; }
+  .beam {
+    width: 520px; height: 70px; border-radius: 35px; background: #fff;
+    box-shadow: 0 0 60px rgba(255, 255, 255, .5); animation-delay: .3s;
+  }
+  .arrow { font-size: 90px; color: var(--muted); animation-delay: 1.4s; }
+  .spectrum { display: flex; flex-direction: column; gap: 10px; }
+  .spectrum div { width: 520px; height: 26px; border-radius: 13px; }
+  h2 { position: absolute; top: 12%; font-size: 72px; font-weight: 800; }
+  h2 span { color: var(--warm); }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <h2 class="fade-up">Ánh sáng <span>trắng</span> = mọi màu</h2>
+    <div class="row">
+      <div class="beam fade-in"></div>
+      <div class="arrow fade-in">→</div>
+      <div class="spectrum" id="spectrum"></div>
+    </div>
+  </div>
+<script>
+  // từng dải màu hiện lần lượt, nối tiếp sau mũi tên
+  const colors = ['#ff3b3b', '#ff8a2a', '#ffd93b', '#3bd96b', '#3bb4ff', '#3b5bff', '#9b3bff'];
+  const box = document.getElementById('spectrum');
+  colors.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'fade-up';
+    d.style.background = c;
+    d.style.animationDelay = `${2 + i * 0.25}s`;
+    box.appendChild(d);
+  });
+</script>
+</body>
+</html>

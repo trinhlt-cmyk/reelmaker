@@ -1,0 +1,29 @@
+{
+  "title": "Định lý Pythagoras",
+  "style": "math",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "rate": "+0%",
+  "captions": true,
+  "transition": "fade",
+  "transitionDuration": 0.5,
+  "tail": 0.8,
+  "scenes": [
+    {
+      "id": "01-tam-giac",
+      "html": "scenes/01-tam-giac.html",
+      "narration": "Lấy một tam giác vuông. Hai cạnh góc vuông là a và b, cạnh dài nhất là c."
+    },
+    {
+      "id": "02-hinh-vuong",
+      "html": "scenes/02-hinh-vuong.html",
+      "narration": "Dựng trên mỗi cạnh một hình vuông. Diện tích của chúng là a bình phương, b bình phương, và c bình phương."
+    },
+    {
+      "id": "03-cong-thuc",
+      "html": "scenes/03-cong-thuc.html",
+      "narration": "Định lý Pythagoras nói rằng: hai hình vuông nhỏ cộng lại, đúng bằng hình vuông lớn."
+    }
+  ]
+}

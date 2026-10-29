@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+  .ray { fill: none; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+  .ray.red { stroke: #ff5a4a; animation: draw 2s ease-out .5s forwards; }
+  .ray.blue { stroke: #4da3ff; animation: draw 1.2s ease-out 1s forwards; }
+  .scatter { stroke: #4da3ff; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 220; stroke-dashoffset: 220; }
+  .molecule { fill: #cfd8ea; }
+  .air { fill: rgba(77, 163, 255, .0); animation: fill-sky 3s ease 4s forwards; }
+  @keyframes fill-sky { to { fill: rgba(77, 163, 255, .28); } }
+  .label { font: 700 44px 'Be Vietnam Pro', sans-serif; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 1920 1080">
+      <rect class="air" x="0" y="0" width="1920" height="1080"/>
+      <circle class="molecule pop" cx="900" cy="470" r="34" style="animation-delay:.2s"/>
+      <path class="ray red" d="M120 470 H1800"/>
+      <path class="ray blue" d="M120 520 H866"/>
+      <g id="scatters"></g>
+      <text class="label fade-in" x="1400" y="430" fill="#ff8a7d" style="animation-delay:2s">đỏ: đi thẳng</text>
+      <text class="label fade-in" x="1170" y="230" fill="#8cc4ff" style="animation-delay:2.6s">xanh: tán xạ khắp nơi</text>
+    </svg>
+  </div>
+<script>
+  // tia xanh bắn ra mọi hướng từ phân tử khí
+  const g = document.getElementById('scatters');
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', `M${900 + Math.cos(a) * 45} ${470 + Math.sin(a) * 45} l${Math.cos(a) * 220} ${Math.sin(a) * 220}`);
+    p.setAttribute('class', 'scatter');
+    p.style.animation = `draw .7s ease-out ${2.2 + i * 0.08}s forwards`;
+    g.appendChild(p);
+  }
+</script>
+</body>
+</html>

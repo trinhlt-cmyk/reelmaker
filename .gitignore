@@ -1,0 +1,16 @@
+# phụ thuộc cài trên máy (npm install, các môi trường Python — xem README)
+node_modules/
+.venv/
+.venv-vieneu/
+.venv-whisper/
+__pycache__/
+*.pyc
+
+# sinh ra khi chạy thử trong thư mục mẫu
+build/
+out/
+review/
+assets/candidates/
+*.spec.json
+
+.DS_Store

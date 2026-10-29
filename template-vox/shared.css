@@ -1,0 +1,72 @@
+/* style: vox — phóng sự giải thích kiểu Vox: nền giấy, ảnh tư liệu cắt dán, bút dạ quang, vòng tròn đỏ vẽ tay.
+   Một cảnh = một tấm "bảng ghim": vài mảnh ảnh/giấy, mỗi mảnh vào một lúc theo lời đọc. */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800;900&family=Noto+Serif:wght@600&display=block');
+
+:root {
+  --paper: #f2ede3;
+  --ink: #161616;
+  --hl: #ffd84a;      /* bút dạ quang */
+  --red: #e5402b;     /* bút đỏ khoanh, mũi tên */
+  --tag: #161616;     /* nhãn đen chữ trắng */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; color: var(--ink);
+  font-family: 'Be Vietnam Pro', -apple-system, Arial, sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgba(0,0,0,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+    radial-gradient(ellipse at 50% 40%, #f7f3ea 0%, var(--paper) 60%, #e3dccd 100%); }
+
+/* cả bảng đẩy vào chậm suốt cảnh (vox.js đặt animation-duration = độ dài cảnh) */
+.board { position: absolute; inset: 0; animation: push linear forwards; }
+@keyframes push { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+/* ảnh cắt dán: viền trắng, bóng đổ, nghiêng nhẹ; vào bằng cú "đập" xuống */
+.cutout { position: absolute; background: #fff; padding: 14px 14px 18px; box-shadow: 0 18px 40px rgba(0,0,0,.28);
+  opacity: 0; animation: slap .45s cubic-bezier(.2,.9,.3,1.25) forwards; }
+.cutout img { display: block; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(.9); }
+.cutout figcaption { margin-top: 10px; font: 600 22px/1.2 'Be Vietnam Pro', sans-serif; color: #555; }
+.cutout.bw img { filter: grayscale(1) contrast(1.15); }
+@keyframes slap { from { opacity: 0; transform: translateY(-30px) scale(1.12) rotate(var(--r, 0deg)); }
+  to { opacity: 1; transform: rotate(var(--r, 0deg)); } }
+/* băng keo dán góc */
+.tape::before { content: ''; position: absolute; top: -18px; left: 50%; width: 150px; height: 40px; z-index: 2;
+  transform: translateX(-50%) rotate(-4deg); background: rgba(255, 246, 200, .78); box-shadow: 0 2px 4px rgba(0,0,0,.08); }
+
+/* tiêu đề lớn; <mark> = bút dạ quang quét qua (đặt animation-delay trên mark) */
+.headline { position: absolute; font: 900 92px/1.08 'Be Vietnam Pro', sans-serif; letter-spacing: -.01em; }
+mark { color: inherit; background: linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 92%, transparent 92%) no-repeat 0 0 / 0% 100%;
+  animation: sweep .55s ease-out forwards; padding: 0 .06em; white-space: nowrap; }
+@keyframes sweep { to { background-size: 100% 100%; } }
+
+/* thẻ ghi chú: giấy trắng, chữ serif, có băng keo */
+.note { position: absolute; background: #fffdf7; padding: 34px 40px; box-shadow: 0 14px 30px rgba(0,0,0,.2);
+  font: 600 44px/1.3 'Noto Serif', Georgia, serif; opacity: 0; animation: slap .45s cubic-bezier(.2,.9,.3,1.25) forwards; }
+.note small { display: block; margin-bottom: 12px; font: 800 24px/1 'Be Vietnam Pro', sans-serif; letter-spacing: .12em;
+  text-transform: uppercase; color: #b8301d; }
+
+/* nhãn đen chữ trắng (năm, tên, nguồn) */
+.tag { position: absolute; padding: 10px 20px; background: var(--tag); color: #fff; font: 800 34px/1 'Be Vietnam Pro', sans-serif;
+  letter-spacing: .04em; text-transform: uppercase; opacity: 0; animation: pop .4s cubic-bezier(.2,.9,.3,1.3) forwards; }
+.tag.red { background: #b52b1a; }
+@keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+
+/* nét bút đỏ (vox.js tạo: .ring, .arrow) */
+.ring { position: absolute; z-index: 4; pointer-events: none; }
+.arrow { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; }
+.ink { fill: none; stroke: var(--red); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1 1; stroke-dashoffset: 1; animation: ink linear forwards; }
+@keyframes ink { to { stroke-dashoffset: 0; } }
+
+/* phím máy chữ (hàng phím chữ cái) */
+.keys { position: absolute; display: flex; gap: 18px; }
+.key { width: 118px; height: 118px; border-radius: 50%; display: grid; place-items: center; background: #1c1c1c; color: #fff;
+  border: 8px solid #c9c1ad; box-shadow: 0 8px 0 #8d8571, 0 16px 26px rgba(0,0,0,.25);
+  font: 800 54px/1 'Be Vietnam Pro', sans-serif; opacity: 0; animation: pop .35s cubic-bezier(.2,.9,.3,1.3) forwards; }
+.key.lit { animation-name: pop, lit; animation-duration: .35s, .3s; }   /* animation-delay: "hiện, sáng" */
+@keyframes lit { to { background: var(--hl); color: var(--ink); border-color: #e0b400; } }
+
+/* phụ đề: dải trắng chữ đen */
+html body #reel-caption { background: #fff; color: var(--ink); border-radius: 0; box-shadow: 0 8px 20px rgba(0,0,0,.18);
+  font: 700 42px/1.3 'Be Vietnam Pro', sans-serif; }

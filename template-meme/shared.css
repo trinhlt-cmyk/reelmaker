@@ -1,0 +1,33 @@
+/* style: meme — người que vẽ SVG, khung vuông, chữ meme trắng viền đen, video ngắn lặp liền mạch */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800;900&display=block');
+
+:root { --bg: #fdfcf7; --ink: #16161a; --hl: #ffd400; --hot: #ff3b30; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink);
+  font-family: 'Be Vietnam Pro', sans-serif; }
+
+svg.stage { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ground { stroke: var(--ink); stroke-width: 6; stroke-linecap: round; }
+/* đồ vật vẽ tay: viền mực, tô nhạt */
+.prop { fill: #fff; stroke: var(--ink); stroke-width: 8; stroke-linejoin: round; stroke-linecap: round; }
+
+/* chữ meme: trên và dưới, viết hoa, trắng viền đen */
+.meme { position: absolute; left: 40px; right: 40px; text-align: center; font: 900 72px/1.12 'Be Vietnam Pro', sans-serif;
+  text-transform: uppercase; color: #fff; -webkit-text-stroke: 9px #000; paint-order: stroke fill; letter-spacing: .03em; word-spacing: .08em; }
+.meme.top { top: 30px; }
+.meme.bottom { bottom: 30px; }
+.meme b { color: var(--hl); }
+
+/* bong bóng thoại (stick.js) */
+.bubble path { fill: #fff; stroke: var(--ink); stroke-width: 6; stroke-linejoin: round; }
+.bubble-text { font: 800 46px 'Be Vietnam Pro', sans-serif; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+
+/* hiện / ẩn theo thời gian (animation-delay), dùng chung */
+.pop { opacity: 0; animation: pop .35s cubic-bezier(.2,.9,.3,1.4) forwards; }
+/* hiện rồi tắt: style="--in:1.5s; --out:2.3s" (để khung cuối giống khung đầu khi lặp) */
+.blink { opacity: 0; animation: pop .3s cubic-bezier(.2,.9,.3,1.4) var(--in) forwards, out .2s ease-in var(--out) forwards; }
+@keyframes pop { from { opacity: 0; transform: scale(.5); } to { opacity: 1; transform: none; } }
+@keyframes out { to { opacity: 0; } }
+/* chấm cảm xúc quanh đầu: "!" , "?" , mồ hôi */
+.fx { font: 900 110px 'Be Vietnam Pro', sans-serif; fill: var(--hot); }

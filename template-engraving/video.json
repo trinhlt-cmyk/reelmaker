@@ -1,0 +1,29 @@
+{
+  "title": "Kẻ Chợ qua tranh khắc thế kỷ XVII",
+  "style": "engraving",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "rate": "-5%",
+  "captions": true,
+  "transition": "fade",
+  "transitionDuration": 0.9,
+  "tail": 0.8,
+  "scenes": [
+    {
+      "id": "01-ke-cho",
+      "html": "scenes/01-ke-cho.html",
+      "narration": "Đây là Kẻ Chợ, tức kinh thành Thăng Long, trong một bức tranh khắc cuối thế kỷ mười bảy của Samuel Baron."
+    },
+    {
+      "id": "02-thuyen",
+      "html": "scenes/02-thuyen.html",
+      "narration": "Trên sông Hồng là những chiếc thuyền chiến dài, hai bên mạn có rất nhiều tay chèo."
+    },
+    {
+      "id": "03-thuong-diem",
+      "html": "scenes/03-thuong-diem.html",
+      "narration": "Bên bờ sông còn có thương điếm của người Anh và người Hà Lan, những thương nhân phương Tây đến đây buôn bán."
+    }
+  ]
+}

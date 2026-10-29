@@ -1,0 +1,32 @@
+{
+  "title": "3 điều về Thành nhà Hồ",
+  "style": "news",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "rate": "+10%",
+  "captions": true,
+  "captionStyle": "karaoke",
+  "captionMaxWords": 3,
+  "transition": "cut",
+  "lead": 0.15,
+  "tail": 0.35,
+  "scenes": [
+    {
+      "id": "01-hook",
+      "html": "scenes/01-hook.html",
+      "narration": "Ở Việt Nam có một toà thành bằng đá đã hơn sáu trăm năm tuổi."
+    },
+    {
+      "id": "02-1397",
+      "html": "scenes/02-1397.html",
+      "narration": "Thành nhà Hồ được xây năm một nghìn ba trăm chín mươi bảy, chỉ trong khoảng ba tháng."
+    },
+    {
+      "id": "03-unesco",
+      "html": "scenes/03-unesco.html",
+      "narration": "Năm hai nghìn không trăm mười một, toà thành được UNESCO công nhận là Di sản Thế giới."
+    }
+  ],
+  "beatSync": true
+}

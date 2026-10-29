@@ -1,0 +1,40 @@
+/* style: math — toán kiểu 3Blue1Brown: nền tối, nét sáng, tô màu trong, công thức KaTeX.
+   Màu cố định cho từng đại lượng (a xanh dương, b xanh lá, c vàng…) và giữ nguyên suốt video. */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=block');
+
+:root {
+  --bg: #111114;
+  --fg: #ece9e4;
+  --muted: #8c8a86;
+  --blue: #58c4dd;
+  --green: #83c167;
+  --yellow: #f4d345;
+  --red: #fc6255;
+  --purple: #9a72ac;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--fg);
+  font-family: 'Noto Serif', Georgia, serif; }
+
+svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* nét mặc định: trắng, bo tròn; tô trong (fill-opacity) như manim */
+svg.scene * { fill: none; stroke: var(--fg); stroke-width: 5; stroke-linejoin: round; stroke-linecap: round; }
+svg.scene .blue   { stroke: var(--blue);   fill: var(--blue);   fill-opacity: .45; }
+svg.scene .green  { stroke: var(--green);  fill: var(--green);  fill-opacity: .45; }
+svg.scene .yellow { stroke: var(--yellow); fill: var(--yellow); fill-opacity: .45; }
+svg.scene .red    { stroke: var(--red);    fill: var(--red);    fill-opacity: .45; }
+svg.scene .thin   { stroke-width: 3; }
+
+/* công thức / nhãn: đặt tâm tại left/top */
+.tex { position: absolute; translate: -50% -50%;  /* translate riêng: data-fade / data-indicate dùng transform */ font-size: 64px; white-space: nowrap; color: var(--fg); }
+.tex.big { font-size: 110px; }
+.tex.small { font-size: 46px; }
+.c-blue { color: var(--blue); } .c-green { color: var(--green); } .c-yellow { color: var(--yellow); } .c-red { color: var(--red); }
+
+.title { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font: 400 64px/1.2 'Noto Serif', Georgia, serif; }
+.note { position: absolute; font: italic 400 44px/1.35 'Noto Serif', Georgia, serif; color: var(--muted); }
+
+/* phụ đề: chữ trắng, không nền, bóng mờ */
+html body #reel-caption { background: none; color: var(--fg); text-shadow: 0 2px 10px #000;
+  font: 400 42px/1.35 'Noto Serif', Georgia, serif; }

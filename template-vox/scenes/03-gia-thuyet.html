@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>03 Giả thuyết</title>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .cutout { left: 110px; top: 140px; width: 600px; height: 600px; --r: -2deg; animation-delay: .2s; }
+  .keys { left: 830px; top: 150px; }
+  .note { left: 830px; top: 380px; width: 980px; animation-delay: 1s; }
+  .note mark { animation-delay: 3.6s; }
+</style>
+</head>
+<body>
+  <div class="board">
+    <figure class="cutout bw tape"><img src="../assets/ban-phim.jpg" alt=""></figure>
+    <div class="keys">
+      <!-- hiện lần lượt, rồi sáng dần khi nói "đặt xa ra" -->
+      <div class="key lit" style="animation-delay:.4s, 3.6s">Q</div>
+      <div class="key lit" style="animation-delay:.48s, 3.68s">W</div>
+      <div class="key lit" style="animation-delay:.56s, 3.76s">E</div>
+      <div class="key lit" style="animation-delay:.64s, 3.84s">R</div>
+      <div class="key lit" style="animation-delay:.72s, 3.92s">T</div>
+      <div class="key lit" style="animation-delay:.8s, 4s">Y</div>
+    </div>
+    <div class="note"><small>Giả thuyết phổ biến</small>Các chữ hay đi liền nhau được <mark>đặt xa ra</mark>, để cần chữ không va vào nhau mà kẹt.</div>
+  </div>
+  <script src="../vox.js"></script>
+</body>
+</html>

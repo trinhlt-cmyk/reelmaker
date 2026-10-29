@@ -1,0 +1,35 @@
+[
+  {
+    "file": "assets/sholes.png",
+    "kind": "photo",
+    "title": "Christopher Latham Sholes artwork",
+    "author": "Unknown author",
+    "source": "wikimedia",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "page": "https://commons.wikimedia.org/wiki/File:Christopher_Latham_Sholes_artwork.png",
+    "attributionRequired": false
+  },
+  {
+    "file": "assets/ban-phim.jpg",
+    "kind": "photo",
+    "title": "Sholes-Glidden 1874",
+    "author": "Dr. Bernd Gross",
+    "source": "wikimedia",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Sholes-Glidden_1874.jpg",
+    "attributionRequired": true
+  },
+  {
+    "file": "assets/may-danh-chu.jpg",
+    "kind": "photo",
+    "title": "The Sholes & Glidden Typewriter of 1873",
+    "author": "Tony Casillo",
+    "source": "wikimedia",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:The_Sholes_%26_Glidden_Typewriter_of_1873.jpg",
+    "attributionRequired": true
+  }
+]

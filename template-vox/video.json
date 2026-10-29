@@ -1,0 +1,29 @@
+{
+  "title": "Vì sao bàn phím là QWERTY?",
+  "style": "vox",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "rate": "+5%",
+  "captions": true,
+  "transition": "slideleft",
+  "transitionDuration": 0.45,
+  "scenes": [
+    {
+      "id": "01-cau-hoi",
+      "html": "scenes/01-cau-hoi.html",
+      "narration": "Vì sao bàn phím của bạn không xếp theo thứ tự A, B, C? Câu trả lời nằm ở một chiếc máy từ thế kỷ mười chín."
+    },
+    {
+      "id": "02-may-danh-chu",
+      "html": "scenes/02-may-danh-chu.html",
+      "narration": "Cách xếp này có từ chiếc máy đánh chữ Sholes và Glidden, bán ra năm một nghìn tám trăm bảy mươi tư."
+    },
+    {
+      "id": "03-gia-thuyet",
+      "html": "scenes/03-gia-thuyet.html",
+      "narration": "Một giả thuyết phổ biến: các chữ hay đi liền nhau được đặt xa ra, để các cần chữ không va vào nhau mà kẹt."
+    }
+  ],
+  "srtReplace": { "một nghìn tám trăm bảy mươi tư": "1874" }
+}

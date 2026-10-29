@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>02 giọt nước</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+  <svg class="wb" viewBox="0 0 1920 1080">
+    <!-- 1. mặt trời và tia nắng (khi nói "ánh nắng") -->
+    <g data-draw="0.2-1.1">
+      <circle cx="260" cy="260" r="90"/>
+      <path class="thin" d="M260 130 v-40 M260 390 v40 M130 260 h-40 M390 260 h40 M168 168 l-28 -28 M352 168 l28 -28 M168 352 l-28 28"/>
+    </g>
+    <!-- 2. giọt nước lớn (khi nói "những giọt nước") -->
+    <g data-draw="1.15-2.2">
+      <path class="bold" d="M960 260 C1060 420 1150 520 1150 640 C1150 760 1065 840 960 840 C855 840 770 760 770 640 C770 520 860 420 960 260 Z"/>
+      <path class="thin" d="M860 640 C860 580 890 530 920 500"/>
+    </g>
+    <!-- 3. tia nắng đi vào giọt nước -->
+    <g data-draw="2.25-2.7">
+      <path d="M352 352 L800 600"/>
+    </g>
+    <!-- 4. bảy tia màu đi ra (khi nói "tách ra thành đủ bảy màu") -->
+    <g data-draw="2.75-3.6">
+      <path class="thin" d="M1120 650 L1760 470"/>
+      <path class="thin" d="M1120 665 L1760 560"/>
+      <path class="thin" d="M1120 680 L1760 650"/>
+      <path class="thin" d="M1120 695 L1760 740"/>
+      <path class="thin" d="M1120 710 L1760 830"/>
+    </g>
+    <g data-fill="3.7-0.6">
+      <path d="M960 270 C1058 425 1145 522 1145 640 C1145 755 1062 835 960 835 C858 835 775 755 775 640 C775 522 862 425 960 270 Z" style="fill:var(--sky)"/>
+      <circle cx="260" cy="260" r="86" style="fill:var(--yellow)"/>
+      <g fill="none" stroke-width="12" stroke-linecap="round">
+        <path d="M1130 652 L1760 470" style="stroke:var(--red)"/>
+        <path d="M1130 666 L1760 560" style="stroke:var(--orange)"/>
+        <path d="M1130 680 L1760 650" style="stroke:var(--green)"/>
+        <path d="M1130 694 L1760 740" style="stroke:var(--blue)"/>
+        <path d="M1130 708 L1760 830" style="stroke:var(--violet)"/>
+      </g>
+    </g>
+    <g data-draw="3.8">
+      <text x="1300" y="330" style="font-size:96px">7 màu</text>
+    </g>
+  </svg>
+  <script src="../whiteboard.js"></script>
+</body>
+</html>

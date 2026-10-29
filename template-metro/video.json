@@ -1,0 +1,62 @@
+{
+  "title": "Căn hộ gần ga Văn Quán: ~30 phút tới Văn Miếu",
+  "style": "metro",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "rate": "+10%",
+  "captions": false,
+  "captionMaxWords": 3,
+  "transition": "cut",
+  "lead": 0.15,
+  "tail": 0.35,
+  "scenes": [
+    {
+      "id": "01-toa-nha",
+      "html": "scenes/01-toa-nha.html",
+      "duration": 3.2
+    },
+    {
+      "id": "02-phong-khach",
+      "html": "scenes/02-phong-khach.html",
+      "duration": 3.2
+    },
+    {
+      "id": "03-phong-ngu",
+      "html": "scenes/03-phong-ngu.html",
+      "duration": 3
+    },
+    {
+      "id": "04-ban-cong",
+      "html": "scenes/04-ban-cong.html",
+      "duration": 3
+    },
+    {
+      "id": "05-vi-tri",
+      "html": "scenes/05-vi-tri.html",
+      "duration": 4.4,
+      "transition": "fadeblack",
+      "transitionDuration": 0.4
+    },
+    {
+      "id": "06-metro",
+      "html": "scenes/06-metro.html",
+      "duration": 9.2
+    },
+    {
+      "id": "07-van-mieu",
+      "html": "scenes/07-van-mieu.html",
+      "duration": 4.6
+    },
+    {
+      "id": "08-tong-ket",
+      "html": "scenes/08-tong-ket.html",
+      "duration": 6
+    }
+  ],
+  "beatSync": true,
+  "voice": "vi-VN-NamMinhNeural",
+  "sfx": true,
+  "sfxVolume": 1,
+  "musicLevel": -30
+}

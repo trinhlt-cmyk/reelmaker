@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>01 code chạy</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+  <svg class="stage" id="stage" viewBox="0 0 1080 1080">
+    <!-- sàn, ghế, bàn, laptop -->
+    <path class="ground" d="M60 820 L1020 820"/>
+    <path class="prop" d="M300 755 L430 755 L430 771 L300 771 Z M318 771 L318 820 M412 771 L412 820"/>
+    <path class="prop" d="M560 675 L900 675 L900 695 L560 695 Z M585 695 L585 820 M875 695 L875 820"/>
+    <path class="prop" d="M640 675 L800 675 L820 565 L660 565 Z"/>
+    <circle cx="740" cy="620" r="9" fill="#16161a"/>
+    <!-- "!" khi thấy code chạy -->
+    <text class="fx blink" x="560" y="470" style="--in:1.5s; --out:2.3s" data-sfx="pop" data-sfx-at="1.5">!</text>
+  </svg>
+  <div class="meme top">Khi code chạy được <b>lần đầu</b></div>
+  <div class="meme bottom blink" style="--in:4.4s; --out:7.3s" data-sfx="whoosh" data-sfx-at="4.4">…nhưng không biết <b>tại sao</b></div>
+  <script src="../stick.js"></script>
+  <script>
+    const me = Stick.create('#stage', { x: 450, y: 820, size: 1.5 });
+    me.pose([[0, 'type'], [1.45, 'shock', 0.18], [2.35, 'cheer', 0.25], [3.2, 'dance1', 0.25], [3.6, 'dance2', 0.25],
+             [4.25, 'think', 0.35], [6.4, 'shrug', 0.3], [7.4, 'type', 0.45]]);
+    me.face([[0, 'neutral'], [1.45, 'shock'], [2.35, 'happy'], [4.25, 'neutral'], [6.4, 'smug'], [7.4, 'neutral']]);
+    me.say('CHẠY RỒI!!', 2.45, 4.1);
+    me.say('Ủa… sao chạy được?', 4.7, 6.35, { side: 'right' });
+  </script>
+</body>
+</html>

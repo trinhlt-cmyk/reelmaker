@@ -1,0 +1,26 @@
+{
+  "title": "Vì sao bầu trời màu xanh?",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "voice": "vi-VN-HoaiMyNeural",
+  "rate": "+5%",
+  "captions": true,
+  "scenes": [
+    {
+      "id": "01-hook",
+      "html": "scenes/01-hook.html",
+      "narration": "Bạn có bao giờ tự hỏi, vì sao bầu trời lại có màu xanh?"
+    },
+    {
+      "id": "02-light",
+      "html": "scenes/02-light.html",
+      "narration": "Ánh sáng Mặt Trời trông có vẻ trắng, nhưng thật ra nó là hỗn hợp của đủ mọi màu, từ đỏ đến tím."
+    },
+    {
+      "id": "03-scatter",
+      "html": "scenes/03-scatter.html",
+      "narration": "Khi đi qua bầu khí quyển, ánh sáng xanh có bước sóng ngắn nên bị các phân tử khí tán xạ mạnh hơn nhiều. Ánh xanh ấy dội ra khắp bầu trời, và đó là màu chúng ta nhìn thấy."
+    }
+  ]
+}

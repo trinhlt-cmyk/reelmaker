@@ -1,0 +1,19 @@
+{
+  "title": "Khi code chạy được lần đầu",
+  "style": "meme",
+  "width": 1080,
+  "height": 1080,
+  "fps": 30,
+  "captions": false,
+  "transition": "cut",
+  "sfx": true,
+  "beatSync": false,
+  "scenes": [
+    {
+      "id": "01-code-chay",
+      "html": "scenes/01-code-chay.html",
+      "duration": 8
+    }
+  ],
+  "rate": "+0%"
+}

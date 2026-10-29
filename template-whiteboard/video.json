@@ -1,0 +1,21 @@
+{
+  "title": "Cầu vồng",
+  "style": "whiteboard",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "captions": true,
+  "transition": "fade",
+  "scenes": [
+    {
+      "id": "01-sau-mua",
+      "html": "scenes/01-sau-mua.html",
+      "narration": "Sau cơn mưa chiều, một dải cầu vồng bảy màu hiện lên phía trên ngọn đồi."
+    },
+    {
+      "id": "02-giot-nuoc",
+      "html": "scenes/02-giot-nuoc.html",
+      "narration": "Đó là vì ánh nắng đi qua những giọt nước, và bị tách ra thành đủ bảy màu."
+    }
+  ]
+}

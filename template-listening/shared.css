@@ -1,0 +1,59 @@
+/* style: listening — luyện nghe tiếng Anh: mỗi câu ba lượt (nghe và đoán → nghe chậm có chữ + nghĩa).
+   Câu tiếng Anh do listening.js tách từ: ô trống (chép chính tả) hoặc sáng từng từ theo giọng đọc. */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;800;900&display=block');
+
+:root {
+  --bg: #f5f6fb;
+  --card: #ffffff;
+  --ink: #141a2b;
+  --muted: #5a6380;
+  --accent: #3d5afe;   /* xanh: lượt nghe, từ đang đọc */
+  --hl: #ffe066;
+  --ok: #18a058;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink);
+  font-family: 'Be Vietnam Pro', -apple-system, Arial, sans-serif; }
+body::before { content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 12% 18%, rgba(61,90,254,.10), transparent 40%), radial-gradient(circle at 88% 85%, rgba(255,224,102,.25), transparent 40%); }
+
+/* thanh trên: tên bài + lượt nghe */
+.topbar { position: absolute; left: 120px; right: 120px; top: 80px; height: 70px; display: flex; align-items: center; gap: 22px; }
+.lesson { font: 800 30px/1 'Be Vietnam Pro', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.step { margin-left: auto; padding: 14px 28px; border-radius: 999px; background: var(--accent); color: #fff;
+  font: 800 32px/1 'Be Vietnam Pro', sans-serif; }
+.step.slow { background: var(--ink); }
+
+/* thẻ câu */
+.card { position: absolute; left: 120px; right: 120px; top: 230px; padding: 70px 80px; border-radius: 36px; background: var(--card);
+  box-shadow: 0 30px 70px rgba(20, 26, 43, .10); }
+.en { font: 800 76px/1.3 'Be Vietnam Pro', sans-serif; letter-spacing: -.01em; }
+.en .w { display: inline-block; border-radius: 10px; padding: 0 .05em; margin: 0 -.05em; }
+.en .w.on { background: var(--accent); color: #fff; }
+.en .w.said { color: var(--ink); }
+/* chép chính tả: ô trống cùng độ rộng với từ */
+.en .w.hidden { color: transparent; background: none; border-bottom: 8px solid #c8cde0; border-radius: 0; }
+.en .w.hidden.on { border-bottom-color: var(--accent); }
+.vi { margin-top: 34px; font: 500 46px/1.35 'Be Vietnam Pro', sans-serif; color: var(--muted); }
+
+/* từ vựng */
+.vocab { position: absolute; left: 120px; right: 120px; top: 760px; display: flex; gap: 22px; flex-wrap: wrap; }
+.chip { padding: 16px 26px; border-radius: 18px; background: #fff; border: 3px solid #e3e6f2; font: 600 36px/1 'Be Vietnam Pro', sans-serif; }
+.chip b { color: var(--accent); font-weight: 800; }
+
+/* sóng âm (listening.js) */
+.wave { display: flex; align-items: center; gap: 9px; height: 70px; }
+.wave i { display: block; width: 11px; height: 100%; border-radius: 6px; background: var(--accent); transform-origin: 50% 50%; }
+
+/* chữ lớn ở cảnh mở đầu */
+.hero { position: absolute; left: 120px; right: 120px; top: 300px; transform-origin: 0 50%; animation: drift 12s linear forwards; }
+@keyframes drift { to { transform: scale(1.05); } }
+.hero h1 { font: 900 120px/1.05 'Be Vietnam Pro', sans-serif; letter-spacing: -.02em; }
+.hero p { margin-top: 56px; font: 600 54px/1.3 'Be Vietnam Pro', sans-serif; color: var(--muted); }
+.hero mark { background: var(--hl); color: inherit; padding: 0 .15em; border-radius: 8px; }
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+.fade-up { opacity: 0; animation: fade-up .6s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+.pop { opacity: 0; animation: pop .4s cubic-bezier(.2,.9,.3,1.3) forwards; }

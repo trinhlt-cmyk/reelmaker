@@ -1,0 +1,18 @@
+{
+  "name": "reelmaker",
+  "version": "1.0.0",
+  "description": "Video giải thích / TikTok từ cảnh HTML + giọng đọc (edge-tts, VieNeu), làm cùng Claude Code",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "gl-transitions": "^1.75.0",
+    "puppeteer-core": "^25.16.0"
+  },
+  "type": "module",
+  "bin": {
+    "reelmaker": "bin/reelmaker.js"
+  },
+  "private": true
+}

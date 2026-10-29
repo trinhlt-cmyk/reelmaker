@@ -1,0 +1,23 @@
+/* transit.css — bản đồ tuyến metro / tàu (lib/transit.js). Màu tuyến: --line (mặc định xanh chanh). */
+:root { --line: var(--hl, #c8f43a); }
+body.map { background: #0c0e12; }
+.m-cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+/* nền tối từ bản đồ sáng: đảo màu, giữ nước xanh, bớt rực */
+.m-img { display: block; filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(1.05) saturate(.4); }
+.m-img.light { filter: saturate(.85); }
+.m-svg { position: absolute; inset: 0; overflow: visible; }
+.m-line { fill: none; stroke: var(--line); stroke-linecap: round; stroke-linejoin: round; }
+.m-line-glow { fill: none; stroke: var(--line); stroke-linecap: round; opacity: .28; filter: blur(6px); }
+.m-walk { fill: none; stroke: #fff; stroke-linecap: round; }
+.m-dot { fill: #0c0e12; stroke: #dfe6d0; }
+.m-dot.on { fill: var(--line); stroke: var(--line); }
+.m-end { fill: #fff; stroke: var(--line); }
+.m-label { position: absolute; z-index: 12; white-space: nowrap; padding: 10px 16px; margin-left: 26px; border-radius: 10px;
+  background: rgba(12,14,18,.92); border: 2px solid var(--line); color: #fff; font: 800 28px/1.1 'Be Vietnam Pro', sans-serif; text-transform: uppercase; }
+.m-label.left { margin-left: -26px; }
+.m-label small { display: block; margin-top: 4px; font: 600 19px/1 ui-monospace, Menlo, monospace; color: var(--line); letter-spacing: .04em; }
+/* tối dần trên/dưới để chữ nổi trên bản đồ */
+.m-vig { position: absolute; inset: 0; z-index: 5; pointer-events: none;
+  background: linear-gradient(180deg, rgba(12,14,18,.85) 0%, rgba(12,14,18,0) 22%, rgba(12,14,18,0) 50%, rgba(12,14,18,.75) 72%, rgba(12,14,18,.4) 100%); }
+/* ghi nguồn bản đồ: bắt buộc, luôn hiện */
+.m-attrib { position: absolute; right: 170px; bottom: 506px; z-index: 30; font: 600 18px/1 ui-monospace, Menlo, monospace; color: rgba(255,255,255,.55); }

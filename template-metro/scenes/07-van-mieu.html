@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>07 Văn Miếu</title>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../lib/transit.css">
+<script src="../assets/map/metro.js"></script>
+<style>.ttl span,.ttl em{display:block;animation:rise .45s ease-out both}</style>
+</head>
+<body class="map">
+  <h1 class="ttl high"><span>Xuống ga Cát Linh</span><em style="animation-delay:.2s"><b data-transit="walkMin.1">10</b> phút tới <b data-transit="toName">Văn Miếu</b></em></h1>
+  <div class="m-vig"></div>
+  <div class="wm">Video demo · căn hộ minh hoạ · ảnh minh hoạ</div>
+  <div class="m-attrib">© OpenStreetMap</div>
+  <script src="../lib/transit.js"></script>
+  <script>
+    Transit.create({ data: 'metro',
+      walkFrom: 'done', line: 'done', walkTo: [0.9, 3.2],
+      cam: [[0, 'st7', 0.95], [1.0, 'st7', 1.45], [3.6, 'to', 1.45]],
+      labels: [{ at: 0.4, xy: 'st7', text: 'Ga Cát Linh', side: 'left' },
+               { at: 3.2, xy: 'to', text: 'Văn Miếu', sub: 'Quốc Tử Giám' }],
+    });
+  </script>
+</body>
+</html>

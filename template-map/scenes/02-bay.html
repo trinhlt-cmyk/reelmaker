@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>02-bay</title>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../map.css">
+</head>
+<body>
+  <!-- bản đồ: Hà Nội → Thành phố Hồ Chí Minh (flight, 1144 km), đường vẽ từ 0.6s đến 3.92s -->
+  <div class="map-attrib">© OpenStreetMap contributors · OSM France</div>
+  <script src="../map.js"></script>
+  <script>
+    const MAP = {"width":3165,"height":1781,"zoom":7,"mode":"flight","tilesFetched":0,"stops":[{"name":"Hà Nội","xy":[1543.2,404.1]},{"name":"Thành phố Hồ Chí Minh","xy":[1621.7,1376.2]}],"route":[[1543.2,404.1],[1621.7,1376.2]],"km":1144,"minutes":null,"attribution":"© OpenStreetMap contributors · OSM France"};
+    ReelMap.create({ data: MAP, img: '../assets/map/02-bay.png', from: 0.6, to: 3.92,
+                     vehicle: 'plane', follow: 2.0, chip: "Hà Nội – TP.HCM · ~2 giờ bay" });
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>05 Vị trí</title>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../lib/transit.css">
+<script src="../assets/map/metro.js"></script>
+<style>.ttl span,.ttl em{display:block;animation:rise .45s ease-out both}</style>
+</head>
+<body class="map">
+  <h1 class="ttl high"><span>Vị trí</span><em style="animation-delay:.2s"><b data-transit="walkMin.0">5</b> phút đi bộ tới ga</em></h1>
+  <div class="m-vig"></div>
+  <div class="wm">Video demo · căn hộ minh hoạ · ảnh minh hoạ</div>
+  <div class="m-attrib">© OpenStreetMap</div>
+  <script src="../lib/transit.js"></script>
+  <script>
+    Transit.create({ data: 'metro',
+      walkFrom: [0.6, 2.8],
+      cam: [[0, 'from', 1.5], [3.4, 'st0', 1.25]],
+      labels: [{ at: 0.3, xy: 'from', text: 'Căn hộ demo', sub: 'vị trí minh hoạ', side: 'left' },
+               { at: 2.8, xy: 'st0', text: 'Ga Văn Quán', sub: 'metro 2A' }],
+    });
+  </script>
+</body>
+</html>

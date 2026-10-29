@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>06 Metro 2A</title>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../lib/transit.css">
+<script src="../assets/map/metro.js"></script>
+<style>.ttl span,.ttl em{display:block;animation:rise .45s ease-out both}</style>
+</head>
+<body class="map">
+  <h1 class="ttl high"><span>Metro 2A</span><em style="animation-delay:.2s">Hà Đông – Cát Linh</em></h1>
+  <div class="panel"><b id="ga"></b><small id="stat"></small></div>
+  <div class="m-vig"></div>
+  <div class="wm">Video demo · căn hộ minh hoạ · ảnh minh hoạ</div>
+  <div class="m-attrib">© OpenStreetMap</div>
+  <script src="../lib/transit.js"></script>
+  <script>
+    const m = Transit.create({ data: 'metro',
+      walkFrom: 'done', line: [0.5, 8.3], cam: { follow: 0.95 },
+      labels: [2, 3, 5, 7].map((i) => ({ at: 'reach', xy: 'st' + i, text: TRANSIT.metro.stations[i].name })),
+    });
+    // bảng tên ga đổi đúng lúc tuyến tới ga
+    const n = TRANSIT.metro.stations.length;
+    reel.on((t) => {
+      let i = 0;
+      while (i + 1 < n && t >= m.stationTime(i + 1)) i++;
+      const s = TRANSIT.metro.stations[i];
+      document.getElementById('ga').textContent = s.name;
+      document.getElementById('stat').textContent = `ga ${i + 1}/${n} · ${s.km.toFixed(1).replace('.', ',')} km · ≈ ${s.min} phút`;
+    });
+  </script>
+</body>
+</html>

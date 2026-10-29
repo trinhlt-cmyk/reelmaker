@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>01 sau cơn mưa</title>
+<link rel="stylesheet" href="../shared.css">
+</head>
+<body>
+  <svg class="wb" viewBox="0 0 1920 1080">
+    <!-- 1. mây và mưa (khi giọng nói "sau cơn mưa chiều") -->
+    <g data-draw="0.2-1.3">
+      <path d="M300 300 C260 300 240 260 270 235 C260 190 320 170 350 195 C370 150 450 150 470 200 C510 180 560 210 545 250 C590 260 585 310 540 312 Z"/>
+      <path class="thin" d="M320 360 l-18 44 M370 360 l-18 44 M420 360 l-18 44 M470 360 l-18 44 M520 360 l-18 44"/>
+      <path class="thin" d="M345 430 l-18 44 M395 430 l-18 44 M445 430 l-18 44 M495 430 l-18 44"/>
+    </g>
+    <!-- 2. cầu vồng: 3 vòng cung (khi nói "một dải cầu vồng") -->
+    <g data-draw="1.35-2.5">
+      <path d="M600 735 A390 390 0 0 1 1380 735"/>
+      <path d="M660 735 A330 330 0 0 1 1320 735"/>
+      <path d="M720 735 A270 270 0 0 1 1260 735"/>
+    </g>
+    <!-- 3. tô bảy màu (khi nói "bảy màu") -->
+    <g data-fill="2.55-0.6">
+      <g fill="none" stroke-width="9">
+        <path d="M604 735 A386 386 0 0 1 1376 735" style="stroke:var(--red)"/>
+        <path d="M613 735 A377 377 0 0 1 1367 735" style="stroke:var(--orange)"/>
+        <path d="M622 735 A368 368 0 0 1 1358 735" style="stroke:var(--yellow)"/>
+        <path d="M631 735 A359 359 0 0 1 1349 735" style="stroke:var(--green)"/>
+        <path d="M640 735 A350 350 0 0 1 1340 735" style="stroke:var(--blue)"/>
+        <path d="M649 735 A341 341 0 0 1 1331 735" style="stroke:var(--indigo)"/>
+        <path d="M656 735 A334 334 0 0 1 1324 735" style="stroke:var(--violet)"/>
+      </g>
+    </g>
+    <!-- 4. ngọn đồi và cỏ (khi nói "phía trên ngọn đồi") -->
+    <g data-draw="3.0-3.9">
+      <path d="M120 860 C420 700 760 690 1060 760 C1300 815 1560 830 1800 800"/>
+      <path class="thin" d="M380 760 l8 -30 l8 30 M640 722 l8 -30 l8 30 M980 742 l8 -30 l8 30 M1350 818 l8 -30 l8 30"/>
+    </g>
+    <g data-fill="4.0-0.5">
+      <path d="M120 860 C420 700 760 690 1060 760 C1300 815 1560 830 1800 800 L1920 795 L1920 1080 L0 1080 L0 925 Z" style="fill:var(--grass);opacity:.55"/>
+    </g>
+    <!-- 5. chữ viết tay -->
+    <g data-draw="4.1">
+      <text x="1250" y="250" style="font-size:120px">Cầu vồng</text>
+    </g>
+  </svg>
+  <script src="../whiteboard.js"></script>
+</body>
+</html>

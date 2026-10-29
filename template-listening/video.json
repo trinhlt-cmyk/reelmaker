@@ -1,0 +1,39 @@
+{
+  "title": "Luyện nghe: gọi đồ uống ở quán cà phê",
+  "style": "listening",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "voice": "en-US-JennyNeural",
+  "rate": "+0%",
+  "captions": false,
+  "transition": "fade",
+  "transitionDuration": 0.4,
+  "scenes": [
+    {
+      "id": "01-gioi-thieu",
+      "html": "scenes/01-gioi-thieu.html",
+      "voice": "vi-VN-HoaiMyNeural",
+      "rate": "+0%",
+      "narration": "Bài luyện nghe hôm nay: gọi đồ uống ở quán cà phê. Bạn hãy nghe và đoán từng từ nhé."
+    },
+    {
+      "id": "02-nghe",
+      "html": "scenes/02-nghe.html",
+      "voice": "en-US-JennyNeural",
+      "rate": "+0%",
+      "lead": 0.6,
+      "tail": 2.5,
+      "narration": "Can I get a large iced latte with oat milk, please?"
+    },
+    {
+      "id": "03-nghe-cham",
+      "html": "scenes/03-nghe-cham.html",
+      "voice": "en-US-JennyNeural",
+      "rate": "-30%",
+      "lead": 0.6,
+      "tail": 2.0,
+      "narration": "Can I get a large iced latte with oat milk, please?"
+    }
+  ]
+}
