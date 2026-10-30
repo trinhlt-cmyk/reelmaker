@@ -9,6 +9,9 @@ const LUFS_TARGET = -14; // YouTube, TikTok, Reels chuẩn hoá về khoảng n�
 
 // Vùng các ứng dụng video dọc phủ nút/chữ lên (px ở khung 1080×1920).
 const SAFE_9_16 = { top: 150, bottom: 480, left: 60, right: 140 };
+// cảnh mở đầu: câu đầu đọc xong trong chừng này giây, tít chữ to (px ở khung cao 1920) hiện từ 0.5s
+const HOOK_MAX_SECS = 3;
+const HOOK_TITLE_PX = 64;
 
 // ---------------------------------------------------------------- trong trang
 
@@ -227,6 +230,18 @@ async function checkScene(browser, project, scene, { stillDir }) {
 
   for (const e of page.reelErrors) await add('error', 0, 'js', `lỗi JavaScript: ${e}`);
 
+  // cảnh đầu tiên: câu hook phải đọc xong trong ~2 giây ("hookCheck": false để tắt)
+  const hook = project.cfg.scenes[0] === scene && project.cfg.hookCheck !== false;
+  const words = timing.lines.flatMap((l) => l.words ?? []);
+  if (hook && words.length) {
+    const end = words.findIndex((w) => /[.!?…]["”’)]?$/.test(w.text));
+    const first = words.slice(0, end === -1 ? words.length : end + 1);
+    const secs = first.at(-1).end - first[0].start;
+    if (secs > HOOK_MAX_SECS) {
+      await add('warn', first[0].start, 'hook', `câu mở đầu đọc mất ${secs.toFixed(1)}s (${first.length} chữ): hook nên ≤ ${HOOK_MAX_SECS}s, khoảng 12 chữ — "${first.map((w) => w.text).join(' ').slice(0, 60)}"`);
+    }
+  }
+
   const late = await page.evaluate(lateAnimations, timing.duration - 0.3);
   for (const a of late) {
     await add('warn', a.end, 'late', `hiệu ứng ${a.name} của ${a.who} kết thúc lúc ${a.end.toFixed(1)}s, sát/sau khi hết cảnh (${timing.duration.toFixed(1)}s)`, a.who + a.name);
@@ -258,6 +273,10 @@ async function checkScene(browser, project, scene, { stillDir }) {
 
     if (t === 0.3 && body.length === 0 && frame.std < 3) {
       await add('error', t, 'blank', 'cảnh trống trơn ở 0.3s: nên có gì đó hiện ngay từ đầu');
+    }
+    // hook: khung đầu cũng là ảnh xem trước khi lướt — tít phải hiện, chữ to, ngay từ đầu
+    if (hook && t === 0.5 && !body.some((x) => x.fontSize >= HOOK_TITLE_PX * (height / 1920))) {
+      await add('warn', t, 'hook', 'cảnh mở đầu chưa có tít chữ to lúc 0.5s: người xem lướt qua trước khi biết video nói gì');
     }
 
     for (const [i, x] of body.entries()) {

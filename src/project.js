@@ -37,7 +37,7 @@ export function loadProject(dir) {
   if (!Array.isArray(cfg.scenes) || cfg.scenes.length === 0) throw new Error('video.json chưa có scenes');
   const ids = new Set();
   cfg.scenes = cfg.scenes.map((s, i) => {
-    const scene = { voice: cfg.voice, rate: cfg.rate, lead: cfg.lead, tail: cfg.tail, ...s };
+    const scene = { voice: cfg.voice, rate: cfg.rate, pitch: cfg.pitch, lead: cfg.lead, tail: cfg.tail, ...s };
     scene.id ??= String(i + 1).padStart(2, '0');
     if (ids.has(scene.id)) throw new Error(`trùng id cảnh "${scene.id}"`);
     ids.add(scene.id);

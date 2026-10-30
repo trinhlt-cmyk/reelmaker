@@ -31,15 +31,22 @@ Talk to the user in their language (Vietnamese by default). Start each step with
      in angle or structure, not three wordings of one script — e.g. *câu hỏi → giải đáp* (start from a puzzle the
      viewer has), *kể chuyện* (follow one character or one object through it), *liệt kê / so sánh* (numbered steps,
      myth vs fact, before/after), *thí nghiệm / ví dụ đời thường*, *góc nhìn bất ngờ* (a surprising fact first).
-     For each give: a name, one-line idea, the opening line (the hook, word for word), the scene outline in one line
-     (e.g. "Hook → Trứng → Sâu → Nhộng → Bướm → Kết"), and the estimated length. Ask with one AskUserQuestion
-     (one option per direction, the one you recommend first with "(Recommended)" and a one-line reason; put the
-     hook in `preview`). The user may also pick "Other" to mix directions ("hook của 2, cấu trúc của 1").
+     For each give: a name, one-line idea, the opening line (the hook, word for word, see **Hook** below) with its
+     on-screen title, the scene outline in one line (e.g. "Hook → Trứng → Sâu → Nhộng → Bướm → Kết"), and the
+     estimated length. Ask with one AskUserQuestion (one option per direction, the one you recommend first with
+     "(Recommended)" and a one-line reason; put the hook and title in `preview`). The user may also pick "Other"
+     to mix directions ("hook của 2, cấu trúc của 1").
+   - **2a+. Chọn câu hook.** Once a direction is picked, write **3 hooks for it, each from a different formula**
+     (below), each with spoken line + on-screen title, and ask with one AskUserQuestion (recommended first). Skip
+     only if the user already wrote the hook or said "làm luôn".
    - **2b. Kịch bản chi tiết.** Write the chosen direction as a table in chat: scene id, narration, what is shown on
-     screen. One idea per scene, 1–3 sentences (≈ 5–12 s). Write for the ear: short sentences, numbers spelled the
-     way they are said, no symbols or markdown. Wait for approval; apply edits until approved. If the user wants a
-     different direction now, go back to 2a. Then write it into `video.json` (replace the sample scenes) and run
-     `reelmaker voice <folder>`.
+     screen. One idea per scene, 1–3 sentences (≈ 5–12 s). Write for the ear: short sentences, no markdown. Write
+     numbers, money, dates, units and names the way they should **appear** ("70.000đ/kg", "28/10", "15%",
+     "TP.HCM", "iPhone 17"): for Vietnamese voices reelmaker turns them into speech itself (see **Phát âm**) and
+     captions show them as written. Wait for approval; apply edits until approved. If the user wants a
+     different direction now, go back to 2a. Then write it into `video.json` (replace the sample scenes), run
+     `reelmaker say --check <folder>` and handle what it lists (below), then `reelmaker voice <folder>` (it prints
+     "đọc là: …" for each changed scene: read it for mistakes).
    Keep the other directions in `script-options.md` in the project folder (name, idea, hook, outline), so the user
    can ask later for "phiên bản 2" of the same video from another direction.
 3. **Bước 3/5 — Nghe thử giọng.** Report each scene's length and the total, give the audio files
@@ -61,9 +68,8 @@ Talk to the user in their language (Vietnamese by default). Start each step with
    Give the path of `out/video.mp4`, its length and the check summary (errors / warnings left), `open` it, and ask
    what to change. Changes: edit the narration or HTML and render again; only changed scenes re-render.
    **Subtitles (SRT):** render also writes `out/video.srt` (YouTube CC: viewers can turn it on/off, auto-translate,
-   search). Narration spells numbers for the voice ("một nghìn chín trăm năm mươi sáu"); in Bước 2 add to
-   `video.json` a `"srtReplace"` map from each spelled phrase to how it should read on screen
-   (`{"một nghìn chín trăm năm mươi sáu": "1956", "hai trăm triệu": "200 triệu", "Số một.": "Số 1."}`), then
+   search). It shows the narration as written (digits stay digits); older projects whose narration spells
+   numbers out can add `"srtReplace"` (`{"một nghìn chín trăm năm mươi sáu": "1956"}`). Run
    `reelmaker srt <folder>` (no re-render) and Read the file. Tell the user to upload it with the video on YouTube
    (Phụ đề → Tải tệp lên); TikTok/Reels don't need it (captions are burned in).
    **Thumbnail in the same step:** propose a short title (≤ 6 words, the hook, one keyword in `*…*` turns yellow,
@@ -72,13 +78,76 @@ Talk to the user in their language (Vietnamese by default). Start each step with
    1280×720 for 16:9, 1080×1920 cover for 9:16), Read them, `open` the best one and give all 3 paths so the user
    can pick (`--scene <id>` to force a background). `out/thumbnail.jpg` is option 1.
 
+## Hook (câu mở đầu)
+
+The first 2–3 seconds decide whether a viewer scrolls past, above all on TikTok / Reels / Shorts. The hook is
+what is **said** and **written** — effects only push it. Formulas (example: Indian buffalo meat at 70.000đ/kg):
+- **Con số gây sốc:** "Chỉ 70.000 đồng một ký, rẻ hơn thịt bò gần một nửa." — title "Thịt trâu *70.000đ/kg*"
+- **Đảo ngược điều ai cũng tin:** "Thứ bạn ăn mỗi tuần có thể không phải thịt bò." — "Bạn đang ăn *thịt gì?*"
+- **Câu hỏi đúng chỗ đau:** "Vì sao thịt trâu nhập lại rẻ hơn cả thịt lợn?" — "Rẻ hơn *thịt lợn?*"
+- **Cảnh báo / điều nên biết:** "Trước khi mua thịt bò ở chợ, xem cái này." — "*Xem trước* khi mua"
+- **Bỏ lửng:** "Người chăn nuôi Việt đang gặp một đối thủ không ai ngờ…" — "Đối thủ *không ngờ*"
+Rules:
+- Spoken hook: one sentence, ≤ 12 words, read in ≤ 3 s (`reelmaker check` warns above that); the first word
+  already carries meaning — no "Xin chào", "Hôm nay", "Các bạn có biết", channel intros.
+- It holds a number, a contrast or a sharp word (rẻ, đắt, sai, cấm, sốc, bí mật, không ai ngờ) **and is true**:
+  the rest of the video must deliver what it promises. Never invent a number or exaggerate a source's claim; a
+  bỏ lửng hook gets its answer before the end.
+- On-screen title: ≤ 6 words, says the same idea differently (not a transcript), one keyword in `*…*` / yellow;
+  visible from the first frame (big, ≥ 64 px at 1080×1920; check warns if no big title at 0.5 s). Scene 1 is
+  also the thumbnail people see in the feed.
+- Delivery: for a feed video give the hook scene a punchier read: `"rate": "+22%", "pitch": "+22Hz"` on scene 1
+  and `"pitch": "+6Hz"` for the rest (edge-tts voices only; VieNeu ignores pitch). `reelmaker say "<hook>" --rate
+  +22% --pitch +22Hz` to try levels.
+- Scene 2 pays off fast (the number explained, the answer started) so the hook does not feel like bait.
+- For 16:9 YouTube explainers the same rules apply, a little looser (≤ 4 s is fine; say so if you keep it).
+
+## Giọng nhân bản (`reelmaker voice-clone`)
+
+The user can have videos read in their own voice: `reelmaker voice-clone <recording> --name "<Tên>" --consent`
+(3–15 s of clear speech, any format: m4a from a phone, mp3, wav, even a video; quiet room, natural pace, 6–10 s is
+best). It runs offline with VieNeu (first time downloads the speaker encoder + denoiser) and saves
+`~/.reelmaker/voices/<Tên>/`; then `"voice": "clone:<Tên>"` (or `reelmaker setup --voice "<Tên>"`); it shows in
+`reelmaker voices`. Captions are estimated then aligned by Whisper, like other VieNeu voices; `pitch` is ignored.
+- **Consent first:** before passing `--consent`, ask the user whether the recording is their own voice or someone
+  who agreed. Never clone a public figure or anyone who has not agreed, whatever the stated purpose; refuse and
+  say why. Don't download voice recordings of other people from the web to clone.
+- Several files at once are joined (`voice-clone a.m4a b.mp4 --name …`); up to 60 s is used (best 8 s window +
+  averaged voice print). Songs or videos with background music: add `--separate` (Demucs splits the vocals off
+  first; `.venv-demucs`); without it the music leaks into the voice (measured 0.74 → 0.79 similarity with it).
+- Clean recordings are not denoised (the denoiser made voices less similar); speeding a clone above +10% also
+  lowers similarity — shorten the narration instead. To match a person's delivery (poetry-like, phrase by phrase),
+  set `"phrasing": true` (pause after every comma phrase) and tune `rate` until words/second match their recording.
+- Try it: `reelmaker say "<a line>" --voice "clone:<Tên>"`; if it sounds off, record again (less noise, no music,
+  one speaker) and re-run with the same name (scenes using it re-voice by themselves). `--list`, `--remove "<Tên>"`.
+
+## Phát âm (từ điển, `reelmaker say`)
+
+For Vietnamese voices (edge `vi-VN-*`, VieNeu) the narration is converted before it is voiced; captions, SRT and
+`reel.lines` keep the words as written (`build/audio/<id>.json` holds the spoken form).
+- Automatic: numbers ("70.000" → bảy mươi nghìn, "1,5" → một phẩy năm, "0912…" digit by digit), money and units
+  (đ, VND, USD, $, %, km, kg, m², km/h, k, tr…), "/kg" → một ký, "đồng/tháng", dates ("28/10/2026", "ngày 28/10",
+  "tháng 4" → tháng tư), times ("8h30"), ranges ("10-15" → mười đến mười lăm), "thứ 4" → thứ tư, "x2".
+- Dictionary: `data/pronounce.vi.json` (built-in: TP.HCM, UBND, AI, iPhone, TikTok…) < `~/.reelmaker/pronounce.json`
+  (the user's) < `"pronounce": {…}` in `video.json` (this video only; `null` turns a built-in entry off).
+  Keys with capitals match case exactly. `"pronounce": false` turns the whole thing off.
+- `reelmaker say --check <folder>` lists words likely misread (abbreviations, foreign words, mixed case) not in the
+  dictionary. For each: if the reading is obvious, propose one ("Canva" → "can va") and add it — to `video.json`
+  `pronounce` for names only in this video, `reelmaker say "<từ>" --as "<cách đọc>"` (user dictionary) for words
+  that will come back; ask the user when unsure. Write readings as Vietnamese syllables the voice can read.
+- `reelmaker say "<câu>"` voices a sentence with the saved voice and prints "đọc là: …" + the mp3 path (plays by
+  itself only in the user's terminal). `--list` shows the user's entries, `--remove "<từ>"` drops one.
+- When the user says a word is read wrong ("đọc sai chữ X"), fix it with `say --as`, then `reelmaker voice` again.
+
 ## What `reelmaker check` finds
 
 ✗ errors (fix): text off-screen, text over text, captions covering text, text in the 9:16 app zones (top 150 px,
 bottom 480 px, left 60, right 140 at 1080×1920), letters drawn from a fallback font (missing Vietnamese marks), a
 blank frame at 0.3 s, JS errors, black frames, audio peaks above -1 dBFS.
 ⚠ warnings (judge): text over lines/shapes, low contrast (< 3:1 large text, < 4.5:1 small), an animation ending
-after the scene, captions over 2 lines, picture frozen ≥ 4 s, silence ≥ 2.5 s, loudness off -14 LUFS.
+after the scene, captions over 2 lines, picture frozen ≥ 4 s, silence ≥ 2.5 s, loudness off -14 LUFS,
+`hook` (scene 1: first sentence read in > 3 s, or no big title at 0.5 s — rewrite per **Hook**;
+`"hookCheck": false` in `video.json` for videos that are not meant for a feed).
 `--json` gives the same list with `scene`, `t` (seconds into the scene), `kind`, `message`, `still`.
 `render` already normalises the final audio to -14 LUFS / -1.5 dBTP.
 
@@ -343,7 +412,7 @@ Rules:
 - **Hook in the first 2 seconds**: scene 1 is the most surprising fact as a question or number, never an intro.
 - 3–6 scenes of 3–5 s, one fact per scene, 15–40 s in total; each scene has a real photo (`reelmaker images
   <folder> "<words>" --vertical`, or `--any` and let `.photo` crop) or a clip (`--video`).
-- Narration for the ear and fast: short sentences, numbers spelled as said; on screen show the digits.
+- Narration for the ear and fast: short sentences; write numbers as digits ("70.000đ/kg"), they are read aloud correctly.
 - Time the on-screen number/word to the moment it is said (read `build/audio/<id>.json`; words have times).
 - Keep all text inside the safe zone: top 170 px, bottom 500 px, left 70 px, right 160 px (`.top` already does);
   `reelmaker check` flags anything under the app buttons (✗ — must fix).

@@ -4,7 +4,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadProject, findScene } from '../src/project.js';
-import { voiceScene, listVoices, listVieneuVoices, voiceSamples, allVoices } from '../src/voice.js';
+import { voiceScene, listVoices, listVieneuVoices, voiceSamples, allVoices, resolveVoice, sayText, ENGINES } from '../src/voice.js';
+import { cloneVoice, listClones, removeClone } from '../src/clone.js';
+import { BUILTIN_FILE, USER_FILE, readUserDict, writeUserDict, mergedDict, builtinDict, riskyWords, isVietnamese } from '../src/pronounce.js';
 import { launchBrowser, renderScene, stills } from '../src/render.js';
 import { assemble } from '../src/assemble.js';
 import { readConfig, setup, doctor, applyToProject } from '../src/config.js';
@@ -48,6 +50,14 @@ const HELP = `reelmaker — video từ cảnh HTML + giọng đọc
   reelmaker voices [lọc]               liệt kê giọng edge-tts và VieNeu (mặc định vi-VN)
   reelmaker voices --sample [--text "…"] [--rate -10%] [--only vieneu|edge]
                                           nghe thử mọi giọng: một file mp3, mỗi giọng đọc tên mình rồi câu mẫu
+  reelmaker say "chữ hoặc câu" [--as "cách đọc"] [--voice …] [--rate +20%] [--pitch +15Hz]
+                                          nghe thử cách đọc; --as lưu vào từ điển phát âm (số, tiền, ngày tự đổi)
+  reelmaker say --list | --remove "chữ" | --check <thư mục>
+                                          xem từ điển / bỏ một từ / tìm chữ trong kịch bản dễ bị đọc sai
+  reelmaker voice-clone <file ghi âm> [file…] --name "Tên" [--consent] [--separate]
+                                          nhân bản giọng (của bạn / người đã đồng ý) từ 3–60 giây ghi âm → "voice": "clone:Tên"
+                                          --separate: tách lời khỏi nhạc nền trước (bài hát, video có nhạc; cần Demucs)
+  reelmaker voice-clone --list | --remove "Tên"
   reelmaker voice <thư mục>               tạo giọng đọc, in thời lượng từng cảnh
   reelmaker still <thư mục> <cảnh> [t,…]  chụp ảnh cảnh tại các giây (vd 0.5,3,end)
   reelmaker images <thư mục> "từ khoá" [--video] [--source all|wikimedia|pixabay] [--count 9] [--any]
@@ -88,13 +98,23 @@ const HELP = `reelmaker — video từ cảnh HTML + giọng đọc
                                           cảnh trống, khung đen, hình đứng, im lặng, âm lượng
 `;
 
+async function ask(question) {
+  const readline = await import('node:readline/promises');
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    return await rl.question(question);
+  } finally {
+    rl.close();
+  }
+}
+
 function parse(argv) {
   const args = [];
   const flags = {};
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (!a.startsWith('--')) args.push(a);
-    else if (['--force', '--no-input', '--no-video', '--json', '--video', '--vertical', '--horizontal', '--off', '--sheet', '--any', '--no-open', '--all', '--sample'].includes(a)) flags[a.slice(2)] = true;
+    else if (['--force', '--no-input', '--no-video', '--json', '--video', '--vertical', '--horizontal', '--off', '--sheet', '--any', '--no-open', '--all', '--sample', '--list', '--no-play', '--consent', '--separate'].includes(a)) flags[a.slice(2)] = true;
     else flags[a.slice(2)] = argv[++i];
   }
   return { args, flags };
@@ -183,6 +203,83 @@ const commands = {
     const project = loadProject(dir);
     const { files, duration } = await stills(project, findScene(project, id), times.split(','));
     console.log(`cảnh ${id} dài ${duration.toFixed(2)}s:\n${files.map((f) => `  ${f}`).join('\n')}`);
+  },
+
+  // reelmaker voice-clone <file ghi âm> --name "Lê" --consent | --list | --remove "Lê"
+  async 'voice-clone'(files, flags) {
+    const file = files[0];
+    if (flags.list) {
+      const clones = listClones();
+      if (!clones.length) return console.log('chưa có giọng nhân bản nào');
+      for (const c of clones) console.log(`  ${c.name.padEnd(18)} ${String(c.seconds).padStart(5)}s  từ ${c.source}  (${c.created.slice(0, 10)})  → "voice": "clone:${c.name}"`);
+      return;
+    }
+    if (flags.remove) {
+      removeClone(flags.remove);
+      return console.log(`✓ đã xoá giọng nhân bản "${flags.remove}"`);
+    }
+    if (!file || !flags.name) throw new Error('dùng: reelmaker voice-clone <file ghi âm 3–60 giây> [file…] --name "<tên>" [--consent] [--separate] [--denoise on|off]');
+    // chỉ giọng của chính mình, hoặc người đã đồng ý
+    if (!flags.consent) {
+      if (!process.stdin.isTTY) throw new Error('cần xác nhận: đây là giọng của bạn hoặc người đã đồng ý cho dùng → thêm --consent');
+      const ok = await ask('Đây là giọng của bạn, hoặc của người đã đồng ý cho bạn dùng? (c/k) ');
+      if (!/^(c|có|y|yes)$/i.test(ok.trim())) throw new Error('không nhân bản: chỉ dùng giọng của bạn hoặc người đã đồng ý');
+    }
+    const c = await cloneVoice(files.map((f) => path.resolve(f)), { name: flags.name, denoise: flags.denoise ?? 'auto', separate: Boolean(flags.separate), ...ENGINES.vieneu });
+    console.log(`✓ giọng nhân bản "${c.name}" (${c.seconds}s ghi âm): ${c.dir}`);
+    console.log(`  bản ghi: tiếng nói to hơn nền ${c.snrDb} dB → ${c.denoise ? 'đã lọc tạp âm' : 'không lọc tạp âm (đủ sạch)'}${c.windows > 1 ? `; ${c.windows} đoạn 8 giây, mẫu chính từ giây ${c.bestAt}` : ''}`);
+    if (c.snrDb < 20) console.log(`  ⚠ bản ghi khá ồn${c.separated ? '' : ' (có nhạc nền? thêm --separate để tách lời khỏi nhạc)'}: bản ghi sạch hơn thì giọng giống hơn`);
+    if (c.seconds < 20) console.log('  mẹo: bản ghi 30–60 giây (nhiều câu, nhiều âm khác nhau) cho giọng ổn định hơn');
+    console.log(`  nghe thử: reelmaker say "Xin chào, đây là giọng của tôi." --voice "clone:${c.name}"`);
+    console.log(`  dùng: "voice": "clone:${c.name}" trong video.json, hoặc reelmaker setup --voice "${c.name}"`);
+  },
+
+  // reelmaker say "iPhone" [--as "ai phôn"] | --remove "iPhone" | --list | --check <thư mục>
+  async say([text], flags) {
+    if (flags.list) {
+      const user = readUserDict();
+      const builtin = Object.keys(builtinDict()).length;
+      console.log(`Từ điển của bạn (${USER_FILE}):`);
+      for (const [k, v] of Object.entries(user)) console.log(`  ${k.padEnd(20)} → ${v ?? '(bỏ cách đọc có sẵn)'}`);
+      if (!Object.keys(user).length) console.log('  (trống)');
+      console.log(`\n+ ${builtin} từ có sẵn: ${BUILTIN_FILE}`);
+      return;
+    }
+    if (flags.check) {
+      const project = loadProject(flags.check);
+      const dict = mergedDict(project);
+      const risky = new Map();
+      for (const s of project.cfg.scenes) {
+        if (!s.narration || !isVietnamese(s.voice, s.narration)) continue;
+        for (const w of riskyWords(s.narration, dict)) risky.set(w, [...(risky.get(w) ?? []), s.id]);
+      }
+      if (!risky.size) return console.log('✓ không thấy chữ nào dễ đọc sai');
+      console.log('Chữ có thể đọc sai (chưa có trong từ điển):');
+      for (const [w, ids] of risky) console.log(`  ${w.padEnd(20)} cảnh ${ids.join(', ')}`);
+      console.log('\n  Nghe thử: reelmaker say "<chữ>"   ·   sửa: reelmaker say "<chữ>" --as "<cách đọc>"');
+      return;
+    }
+    if (flags.remove) {
+      const user = readUserDict();
+      // từ có sẵn: ghi null để tắt; từ của bạn: xoá
+      if (flags.remove in builtinDict()) user[flags.remove] = null;
+      else delete user[flags.remove];
+      writeUserDict(user);
+      console.log(`✓ bỏ cách đọc "${flags.remove}"`);
+      return;
+    }
+    if (!text) throw new Error('dùng: reelmaker say "chữ hoặc câu" [--as "cách đọc"] [--voice …] [--rate +20%] [--pitch +15Hz] | --list | --remove "chữ" | --check <thư mục>');
+    if (flags.as) {
+      writeUserDict({ ...readUserDict(), [text]: flags.as });
+      console.log(`✓ lưu: ${text} → ${flags.as}`);
+    }
+    const cfg = readConfig();
+    let voice = flags.voice ?? cfg.voice;
+    if (flags.voice) voice = resolveVoice(flags.voice, await allVoices()) ?? flags.voice;
+    const { mp3, spoken } = await sayText(text, { voice, rate: flags.rate ?? cfg.rate, pitch: flags.pitch });
+    console.log(`  đọc là: ${spoken}\n  ${mp3}`);
+    // người gõ trong terminal: phát luôn
+    if (process.stdout.isTTY && !flags['no-play']) await run('afplay', [mp3]).catch(() => {});
   },
 
   async keys([action, name]) {

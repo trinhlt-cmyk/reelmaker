@@ -153,6 +153,36 @@ Gõ `reelmaker` không kèm gì để xem danh sách đầy đủ. `<tm>` dướ
 
 Chọn giọng bằng tên hoặc số: `reelmaker setup --voice "Trúc Ly"`, hoặc `"voice"` trong `video.json`.
 
+### Giọng của bạn (nhân bản giọng)
+
+Ghi âm 6–10 giây bạn nói tự nhiên, chỗ yên tĩnh (file m4a từ điện thoại cũng được), rồi:
+
+```bash
+reelmaker voice-clone ~/Downloads/giong-toi.m4a --name "Lê"
+reelmaker say "Xin chào, đây là giọng của tôi." --voice "clone:Lê"
+```
+
+Bài hát hoặc video có nhạc nền: thêm `--separate` để tách lời khỏi nhạc trước (cần Demucs:
+`python3.11 -m venv .venv-demucs && .venv-demucs/bin/pip install demucs soundfile`). Nhiều file cùng lúc cũng được:
+`reelmaker voice-clone a.mp4 b.mp3 --name "Lê" --separate`.
+
+Từ đó đặt `"voice": "clone:Lê"` trong `video.json` (hoặc `reelmaker setup --voice "Lê"`). Chạy offline bằng VieNeu.
+Chỉ dùng giọng của bạn hoặc người đã đồng ý. `reelmaker voice-clone --list` / `--remove "Lê"`.
+
+### Phát âm
+
+Viết kịch bản bình thường: `iPhone 17 giá 70.000đ/kg, rẻ hơn 15% so với TP.HCM.` Giọng đọc tiếng Việt sẽ đọc
+"ai phôn mười bảy giá bảy mươi nghìn đồng một ký…", còn phụ đề vẫn hiện đúng chữ bạn viết. Số, tiền, ngày, giờ,
+đơn vị tự đổi; chữ viết tắt và tên nước ngoài tra từ điển (có sẵn khoảng 140 từ).
+
+| Lệnh | Làm gì |
+|---|---|
+| `reelmaker say "TikTok ra mắt ngày 28/10"` | Nghe thử cách đọc một câu, in ra "đọc là: …" |
+| `reelmaker say "Canva" --as "can va"` | Lưu cách đọc vào từ điển của bạn (`~/.reelmaker/pronounce.json`) |
+| `reelmaker say --check <tm>` | Tìm chữ trong kịch bản dễ bị đọc sai mà từ điển chưa có |
+| `reelmaker say --list` | Xem từ điển của bạn |
+| `reelmaker say --remove "Canva"` | Bỏ một cách đọc |
+
 ### Ảnh, video, nhạc, hoạt hình
 
 | Lệnh | Làm gì |
@@ -236,10 +266,14 @@ Cảnh không có lời thì ghi `"duration": 4` thay cho `"narration"`. Một s
 | Khoá | Ý nghĩa |
 |---|---|
 | `"voice"`, `"rate"` | giọng và tốc độ, cho cả video hoặc từng cảnh |
+| `"phrasing": true` | giọng VieNeu / nhân bản nghỉ sau từng vế câu (nhịp ngâm, kể chuyện) |
+| `"pitch": "+20Hz"` | cao độ giọng (giọng edge-tts): cao hơn nghe gắt, kiểu "giật tít"; đặt cho cả video hoặc riêng cảnh hook |
 | `"captionStyle": "karaoke"` | phụ đề chữ to, từ đang đọc sáng lên |
 | `"transition": "gl:cube"` | kiểu chuyển cảnh (xem `reelmaker transitions`) |
 | `"beatSync": true` | chuyển cảnh rơi đúng nhịp nhạc |
-| `"srtReplace": { "hai trăm": "200" }` | đổi số đọc bằng chữ thành chữ số trong file SRT |
+| `"pronounce": { "Canva": "can va" }` | cách đọc riêng cho video này (`false` = tắt tự đổi số và từ điển) |
+| `"srtReplace": { "hai trăm": "200" }` | (project cũ viết số bằng chữ) đổi lại thành chữ số trong file SRT |
+| `"hookCheck": false` | tắt kiểm tra câu mở đầu (≤ 3 giây, có tít chữ to lúc 0,5 giây) của `reelmaker check` |
 | `"credits": true` | thêm cảnh "Nguồn ảnh và video" ở cuối (mặc định tắt; nguồn nằm trong `mo-ta.txt`) |
 
 ---

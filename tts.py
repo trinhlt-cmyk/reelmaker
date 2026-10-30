@@ -1,6 +1,6 @@
 """Sinh giọng đọc bằng edge-tts + phụ đề canh theo từng từ.
 
-Dùng: tts.py <text_file> <out_mp3> <out_json> <voice> <rate> <max_words>
+Dùng: tts.py <text_file> <out_mp3> <out_json> <voice> <rate> <max_words> [pitch, vd +15Hz]
 In ra JSON: {"lines": [{"start", "end", "text"}], "words": [...]}
 """
 import asyncio
@@ -11,8 +11,8 @@ import time
 import edge_tts
 
 
-async def synthesize(text, audio_path, voice, rate):
-    communicate = edge_tts.Communicate(text, voice=voice, rate=rate, boundary="WordBoundary")
+async def synthesize(text, audio_path, voice, rate, pitch="+0Hz"):
+    communicate = edge_tts.Communicate(text, voice=voice, rate=rate, pitch=pitch, boundary="WordBoundary")
     words = []
     with open(audio_path, "wb") as f:
         async for chunk in communicate.stream():
@@ -57,13 +57,14 @@ def make_line(buf):
 
 def main():
     text_file, out_mp3, out_json, voice, rate, max_words = sys.argv[1:7]
+    pitch = sys.argv[7] if len(sys.argv) > 7 else "+0Hz"
     with open(text_file, encoding="utf-8") as f:
         text = f.read().strip()
     # dịch vụ edge-tts thỉnh thoảng trả về rỗng: thử lại vài lần
     attempts = 6
     for attempt in range(attempts):
         try:
-            words = asyncio.run(synthesize(text, out_mp3, voice, rate))
+            words = asyncio.run(synthesize(text, out_mp3, voice, rate, pitch))
             break
         except edge_tts.exceptions.NoAudioReceived:
             if attempt == attempts - 1:

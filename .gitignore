@@ -3,6 +3,7 @@ node_modules/
 .venv/
 .venv-vieneu/
 .venv-whisper/
+.venv-demucs/
 __pycache__/
 *.pyc
 

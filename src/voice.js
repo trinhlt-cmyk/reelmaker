@@ -6,6 +6,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { hash } from './project.js';
 import { run, mediaDuration } from './exec.js';
+import { cloneDir, cloneStamp, listClones } from './clone.js';
+import { isVietnamese, mergedDict, speakable, spokenText, remapLines } from './pronounce.js';
 
 const HOME = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
@@ -29,6 +31,8 @@ async function alignVoice(project, scene, mp3, json, log) {
 }
 
 export function engineOf(voice) {
+  // "clone:<tên>" = giọng nhân bản, đọc bằng VieNeu với dấu giọng đã lưu
+  if (voice.startsWith('clone:')) return { name: 'vieneu', voice: `clone:${cloneDir(voice.slice('clone:'.length))}`, ...ENGINES.vieneu };
   return voice.startsWith('vieneu:')
     ? { name: 'vieneu', voice: voice.slice('vieneu:'.length), ...ENGINES.vieneu }
     : { name: 'edge', voice, ...ENGINES.edge };
@@ -43,27 +47,42 @@ export function audioPaths(project, scene) {
 export async function voiceScene(project, scene, { force = false, log = console.log } = {}) {
   if (!scene.narration) return { audio: null, duration: scene.duration, lines: [], key: 'silent' };
   const { dir, mp3, json } = audioPaths(project, scene);
+  // giọng đọc nhận bản đã đổi số / từ điển; build/audio/<id>.json giữ chữ như đã đọc, phụ đề trả về chữ của kịch bản
+  const units = project.cfg.pronounce !== false && isVietnamese(scene.voice, scene.narration)
+    ? speakable(scene.narration, mergedDict(project)) : [{ display: scene.narration, spoken: scene.narration }];
+  const spoken = spokenText(units);
+  const shown = (r) => ({ ...r, lines: remapLines(r.lines, units, project.cfg.captionMaxWords) });
   // 'words': phụ đề lưu kèm thời gian từng từ (karaoke); đổi định dạng này thì tăng số để tạo lại
-  const key = hash(scene.narration, scene.voice, scene.rate, project.cfg.captionMaxWords, 'words-1');
+  // pitch ("+15Hz" = giọng cao, gắt kiểu giật tít): chỉ edge-tts; chỉ vào khoá khi có, để giọng cũ không phải đọc lại
+  const pitch = scene.pitch && scene.pitch !== '+0Hz' ? scene.pitch : null;
+  const cloned = scene.voice.startsWith('clone:') ? [cloneStamp(scene.voice.slice('clone:'.length))] : [];
+  // "phrasing": true — VieNeu nghỉ sau từng vế câu (nhịp ngâm, kể chuyện)
+  const phrasing = scene.phrasing ?? project.cfg.phrasing;
+  const key = hash(spoken, scene.voice, scene.rate, project.cfg.captionMaxWords, 'words-1', ...(pitch ? [pitch] : []), ...cloned, ...(phrasing ? ['phrase'] : []));
   if (!force && fs.existsSync(json) && fs.existsSync(mp3)) {
     const cached = JSON.parse(fs.readFileSync(json, 'utf8'));
     if (cached.key === key) {
       // giọng VieNeu đọc trước khi có Whisper: căn lại mà không phải đọc lại
       if (engineOf(scene.voice).name === 'vieneu' && !cached.aligned) {
         const aligned = await alignVoice(project, scene, mp3, json, log);
-        if (aligned) return { audio: mp3, ...aligned };
+        if (aligned) return { audio: mp3, ...shown(aligned) };
       }
-      return { audio: mp3, ...cached };
+      return { audio: mp3, ...shown(cached) };
     }
   }
   fs.mkdirSync(dir, { recursive: true });
-  log(`  🎙  cảnh ${scene.id}: đọc ${scene.narration.length} ký tự (${scene.voice})`);
+  log(`  🎙  cảnh ${scene.id}: đọc ${spoken.length} ký tự (${scene.voice})`);
+  if (spoken !== scene.narration) log(`     đọc là: ${spoken}`);
   const textFile = path.join(dir, `${scene.id}.txt`);
-  fs.writeFileSync(textFile, scene.narration);
+  fs.writeFileSync(textFile, spoken);
   const raw = `${json}.raw`;
   const engine = engineOf(scene.voice);
   if (!fs.existsSync(engine.python)) throw new Error(`chưa cài bộ đọc ${engine.name} (chạy reelmaker doctor)`);
-  const args = [textFile, mp3, raw, engine.voice, scene.rate, String(project.cfg.captionMaxWords)];
+  // tăng tốc (atempo) làm giọng nhân bản kém giống: đo được 0.785 ở +0% → 0.717 ở +25%
+  if (scene.voice.startsWith('clone:') && parseInt(scene.rate, 10) > 10) log(`  ⚠ cảnh ${scene.id}: giọng nhân bản ở tốc độ ${scene.rate} kém giống hơn; nên ≤ +10% (rút gọn lời đọc thay vì tăng tốc)`);
+  if (pitch && engine.name === 'vieneu') log(`  ⚠ cảnh ${scene.id}: giọng VieNeu chưa đổi được cao độ ("pitch" bỏ qua)`);
+  const args = [textFile, mp3, raw, engine.voice, scene.rate, String(project.cfg.captionMaxWords), ...(pitch && engine.name === 'edge' ? [pitch] : []),
+    ...(phrasing && engine.name === 'vieneu' ? ['--phrase'] : [])];
   await run(engine.python, ['-I', engine.script, ...(engine.name === 'vieneu' ? ['say'] : []), ...args]);
   const { lines } = JSON.parse(fs.readFileSync(raw, 'utf8'));
   fs.rmSync(raw);
@@ -72,9 +91,31 @@ export async function voiceScene(project, scene, { force = false, log = console.
   fs.writeFileSync(json, JSON.stringify(result, null, 1));
   if (engine.name === 'vieneu') {
     const aligned = await alignVoice(project, scene, mp3, json, log);
-    if (aligned) return { audio: mp3, ...aligned };
+    if (aligned) return { audio: mp3, ...shown(aligned) };
   }
-  return { audio: mp3, ...result };
+  return { audio: mp3, ...shown(result) };
+}
+
+// Đọc một câu ngắn (reelmaker say): áp từ điển như khi làm video; trả về file mp3 và câu đã đổi
+export async function sayText(text, { voice, rate = '+0%', pitch = null, project = null } = {}) {
+  const spoken = isVietnamese(voice, text) ? spokenText(speakable(text, mergedDict(project))) : text;
+  const dir = path.join(os.homedir(), '.reelmaker', 'say');
+  fs.mkdirSync(dir, { recursive: true });
+  const stamp = voice.startsWith('clone:') ? cloneStamp(voice.slice('clone:'.length)) : '';
+  const base = path.join(dir, hash(spoken, voice, rate, pitch ?? '', stamp).slice(0, 10));
+  const mp3 = `${base}.mp3`;
+  if (!fs.existsSync(mp3)) {
+    const engine = engineOf(voice);
+    if (!fs.existsSync(engine.python)) throw new Error(`chưa cài bộ đọc ${engine.name} (chạy reelmaker doctor)`);
+    fs.writeFileSync(`${base}.txt`, spoken);
+    try {
+      await run(engine.python, ['-I', engine.script, ...(engine.name === 'vieneu' ? ['say'] : []), `${base}.txt`, mp3, `${base}.json`, engine.voice, rate, '12', ...(pitch && engine.name === 'edge' ? [pitch] : [])]);
+    } catch (e) {
+      fs.rmSync(mp3, { force: true });
+      throw e;
+    }
+  }
+  return { mp3, spoken };
 }
 
 export async function listVoices(filter = 'vi-VN') {
@@ -95,7 +136,7 @@ export async function listVieneuVoices() {
 export async function voiceSamples(voices, text, { rate = '+0%', log = console.log } = {}) {
   const dir = path.join(os.homedir(), '.reelmaker', 'voice-samples', hash(text, rate).slice(0, 10));
   fs.mkdirSync(dir, { recursive: true });
-  const spoken = (id) => (id.startsWith('vieneu:') ? id.slice(7) : id.replace(/^vi-VN-|Neural$/g, '').replace(/(\p{Ll})(\p{Lu})/gu, '$1 $2'))
+  const spoken = (id) => (id.startsWith('vieneu:') ? id.slice(7) : id.replace(/^[a-z]{2}-[A-Z]{2}-|(Multilingual)?Neural$/g, '').replace(/(\p{Ll})(\p{Lu})/gu, '$1 $2'))
     .replace('Hoai My', 'Hoài My');
   const parts = [];
   let t = 0;
@@ -144,6 +185,17 @@ export async function allVoices(filter = 'vi-VN') {
       rows.push({
         id: v.id, name: v.id.slice('vieneu:'.length), star: v.label.startsWith('⭐'),
         about: (v.label.split(' — ')[1] ?? '').replace(/Phong cách |Giọng đọc /, ''), engine: 'offline · phụ đề ước lượng',
+      });
+    }
+    // giọng nhân bản của bạn (reelmaker voice-clone)
+    for (const c of listClones()) {
+      rows.push({ id: `clone:${c.name}`, name: c.name, star: true, about: `nhân bản · ${c.seconds}s ghi âm`, engine: 'offline · phụ đề ước lượng' });
+    }
+    // giọng Multilingual của edge-tts đọc được lời tiếng Việt (giọng người nước ngoài); để cuối cho số thứ tự cũ không đổi
+    for (const [id, g] of (await listVoices('Multilingual')).map((l) => l.split(/\s+/)).filter((c) => c[0])) {
+      rows.push({
+        id, name: id.replace(/^[a-z]{2}-[A-Z]{2}-|MultilingualNeural$/g, ''), star: false,
+        about: `${gender[g] ?? g} · giọng nước ngoài`, engine: 'online · phụ đề khớp từng từ',
       });
     }
   }

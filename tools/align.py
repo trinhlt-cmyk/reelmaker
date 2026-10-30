@@ -20,6 +20,48 @@ def norm(w):
     return re.sub(r"[^\w]", "", w)
 
 
+DIGIT = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
+SCALE = ["", "nghìn", "triệu", "tỷ"]
+
+
+def triple(n, full):
+    h, t, u = n // 100, n // 10 % 10, n % 10
+    out = [DIGIT[h], "trăm"] if h or full else []
+    if t == 0:
+        out += (["linh"] if (h or full) else []) + [DIGIT[u]] if u else []
+    elif t == 1:
+        out += ["mười"] + (["lăm"] if u == 5 else [DIGIT[u]] if u else [])
+    else:
+        out += [DIGIT[t], "mươi"] + (["mốt"] if u == 1 else ["lăm"] if u == 5 else [DIGIT[u]] if u else [])
+    return out
+
+
+def read_int(s):
+    """cùng cách đọc với src/pronounce.js (readInt)"""
+    if len(s) > 1 and s.startswith("0") or len(s) > 12:
+        return [DIGIT[int(d)] for d in s]
+    if not s.strip("0"):
+        return ["không"]
+    groups = [int(s[max(0, i - 3):i]) for i in range(len(s), 0, -3)][::-1]
+    out, started = [], False
+    for i, g in enumerate(groups):
+        if g:
+            out += triple(g, started) + ([SCALE[len(groups) - 1 - i]] if SCALE[len(groups) - 1 - i] else [])
+            started = True
+    return out
+
+
+def spell(word):
+    """Whisper viết số bằng chữ số ("28/10/2026", "70.000") — giọng đọc thì đọc bằng chữ: đổi ra chữ để so khớp"""
+    out = []
+    for part in re.findall(r"\d+(?:[.,]\d{3})+|\d+|[^\d\W]+", word):
+        if part[0].isdigit():
+            out += read_int(re.sub(r"\D", "", part))
+        else:
+            out.append(part)
+    return out or [word]
+
+
 def main():
     audio, path = sys.argv[1], sys.argv[2]
     size = sys.argv[3] if len(sys.argv) > 3 else "small"
@@ -37,7 +79,15 @@ def main():
     # lời kịch bản làm gợi ý: Whisper nghe ra đúng chữ hơn (tên riêng, dấu)
     segments, _ = model.transcribe(audio, language="vi", word_timestamps=True, initial_prompt=text,
                                    vad_filter=False, beam_size=5, condition_on_previous_text=False)
-    heard = [(norm(w.word), w.start, w.end) for s in segments for w in (s.words or []) if norm(w.word)]
+    heard = []
+    for s in segments:
+        for w in s.words or []:
+            parts = [norm(p) for p in spell(w.word)] if re.search(r"\d", w.word) else [norm(w.word)]
+            parts = [p for p in parts if p]
+            # một số nhiều chữ: chia thời gian đều cho các chữ
+            for k, p in enumerate(parts):
+                d = (w.end - w.start) / len(parts)
+                heard.append((p, w.start + k * d, w.start + (k + 1) * d))
 
     # khớp chuỗi chữ kịch bản với chuỗi chữ nghe được
     a = [norm(w["text"]) for w in words]
